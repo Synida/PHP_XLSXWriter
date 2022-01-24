@@ -1,9 +1,9 @@
 {
-    "name": "mk-j/php_xlsxwriter",
-    "description": "PHP Library to write XLSX files",
+    "name": "Synida/php_xlsxwriter",
+    "description": "Fork of PHP Library to write XLSX files",
     "keywords": ["php", "library","xls", "xlsx", "excel"],
     "type": "project",
-    "homepage": "https://github.com/mk-j/PHP_XLSXWriter",
+    "homepage": "https://github.com/Synida/PHP_XLSXWriter",
     "license": "MIT",
 
     "autoload": {
