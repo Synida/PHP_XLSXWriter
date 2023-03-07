@@ -640,13 +640,13 @@ class XLSXWriter
                 $font['size'] = (float)$style['font-size'];
             }
             if (isset($style['font']) && is_string($style['font'])) {
-                if ($style['font'] == 'Comic Sans MS') {
+                if ($style['font'] === 'Comic Sans MS') {
                     $font['family'] = 4;
                 }
-                if ($style['font'] == 'Times New Roman') {
+                if ($style['font'] === 'Times New Roman') {
                     $font['family'] = 1;
                 }
-                if ($style['font'] == 'Courier New') {
+                if ($style['font'] === 'Courier New') {
                     $font['family'] = 3;
                 }
                 $font['name'] = (string)$style['font'];
@@ -679,37 +679,37 @@ class XLSXWriter
 
     protected function buildContentTypesXML()
     {
-        $content_types_xml = "";
-        $content_types_xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $content_types_xml .= '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">';
-        $content_types_xml .= '<Override PartName="/_rels/.rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
-        $content_types_xml .= '<Override PartName="/xl/_rels/workbook.xml.rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
+        $contentTypesXml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $contentTypesXml .= '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">';
+        $contentTypesXml .= '<Override PartName="/_rels/.rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
+        $contentTypesXml .= '<Override PartName="/xl/_rels/workbook.xml.rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
         foreach ($this->sheets as $sheet_name => $sheet) {
-            $content_types_xml .= '<Override PartName="/xl/worksheets/' . ($sheet->xmlname) . '" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+            $contentTypesXml .= '<Override PartName="/xl/worksheets/' . ($sheet->xmlname) . '" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
         }
-        $content_types_xml .= '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
-        $content_types_xml .= '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
-        $content_types_xml .= '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>';
-        $content_types_xml .= '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>';
-        $content_types_xml .= "\n";
-        $content_types_xml .= '</Types>';
-        return $content_types_xml;
+        $contentTypesXml .= '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+        $contentTypesXml .= '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+        $contentTypesXml .= '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>';
+        $contentTypesXml .= '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>';
+        $contentTypesXml .= "\n";
+        $contentTypesXml .= '</Types>';
+
+        return $contentTypesXml;
     }
 
     protected function buildWorkbookRelsXML()
     {
         $i = 0;
-        $wkbkrels_xml = "";
-        $wkbkrels_xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $wkbkrels_xml .= '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
-        $wkbkrels_xml .= '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+        $workBookRelXml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $workBookRelXml .= '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+        $workBookRelXml .= '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
         foreach ($this->sheets as $sheet_name => $sheet) {
-            $wkbkrels_xml .= '<Relationship Id="rId' . ($i + 2) . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/' . ($sheet->xmlname) . '"/>';
+            $workBookRelXml .= '<Relationship Id="rId' . ($i + 2) . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/' . ($sheet->xmlname) . '"/>';
             $i++;
         }
-        $wkbkrels_xml .= "\n";
-        $wkbkrels_xml .= '</Relationships>';
-        return $wkbkrels_xml;
+        $workBookRelXml .= "\n";
+        $workBookRelXml .= '</Relationships>';
+
+        return $workBookRelXml;
     }
 
     public function writeToString()
@@ -1020,59 +1020,59 @@ class XLSXWriter
 
     protected function writeCell(
         XLSXWriter_BuffererWriter &$file,
-        $row_number,
-        $column_number,
+        $rowNumber,
+        $columnNumber,
         $value,
-        $num_format_type,
-        $cell_style_idx
+        $numFormatType,
+        $cellStyleIdx
     ) {
-        $cell_name = self::xlsCell($row_number, $column_number);
+        $cellName = self::xlsCell($rowNumber, $columnNumber);
 
         if (!is_scalar($value) || $value === '') { //objects, array, empty
-            $file->write('<c r="' . $cell_name . '" s="' . $cell_style_idx . '"/>');
+            $file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '"/>');
         } elseif (is_string($value) && $value[0] == '=') {
             $file->write(
-                '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="s"><f>' . self::xmlspecialchars(
+                '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="s"><f>' . self::xmlspecialchars(
                     $value
                 ) . '</f></c>'
             );
-        } elseif ($num_format_type == 'n_date') {
+        } elseif ($numFormatType === 'n_date') {
             $file->write(
-                '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="n"><v>' . intval(
-                    self::convert_date_time($value)
-                ) . '</v></c>'
-            );
-        } elseif ($num_format_type == 'n_datetime') {
-            $file->write(
-                '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="n"><v>' . self::convert_date_time(
+                '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . (int)self::convert_date_time(
                     $value
                 ) . '</v></c>'
             );
-        } elseif ($num_format_type == 'n_numeric') {
+        } elseif ($numFormatType === 'n_datetime') {
             $file->write(
-                '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="n"><v>' . self::xmlspecialchars(
+                '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . self::convert_date_time(
+                    $value
+                ) . '</v></c>'
+            );
+        } elseif ($numFormatType === 'n_numeric') {
+            $file->write(
+                '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . self::xmlspecialchars(
                     $value
                 ) . '</v></c>'
             );//int,float,currency
-        } elseif ($num_format_type == 'n_string') {
+        } elseif ($numFormatType === 'n_string') {
             $file->write(
-                '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="inlineStr"><is><t>' . self::xmlspecialchars(
+                '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="inlineStr"><is><t>' . self::xmlspecialchars(
                     $value
                 ) . '</t></is></c>'
             );
-        } elseif ($num_format_type == 'n_auto' || 1) { //auto-detect unknown column types
+        } elseif ($numFormatType === 'n_auto' || 1) { //auto-detect unknown column types
             if (!is_string($value) || $value == '0' || ($value[0] != '0' && ctype_digit($value)) || preg_match(
                     "/^\-?(0|[1-9][0-9]*)(\.[0-9]+)?$/",
                     $value
                 )) {
                 $file->write(
-                    '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="n"><v>' . self::xmlspecialchars(
+                    '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . self::xmlspecialchars(
                         $value
                     ) . '</v></c>'
                 );//int,float,currency
             } else { //implied: ($cell_format=='string')
                 $file->write(
-                    '<c r="' . $cell_name . '" s="' . $cell_style_idx . '" t="inlineStr"><is><t>' . self::xmlspecialchars(
+                    '<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="inlineStr"><is><t>' . self::xmlspecialchars(
                         $value
                     ) . '</t></is></c>'
                 );
@@ -1080,18 +1080,17 @@ class XLSXWriter
         }
     }
 
-    public static function convert_date_time($date_input) //thanks to Excel::Writer::XLSX::Worksheet.pm (perl)
+    public static function convert_date_time($dateInput) //thanks to Excel::Writer::XLSX::Worksheet.pm (perl)
     {
         $days = 0;    # Number of days since epoch
         $seconds = 0;    # Time expressed as fraction of 24h hours in seconds
         $year = $month = $day = 0;
         $hour = $min = $sec = 0;
 
-        $date_time = $date_input;
-        if (preg_match("/(\d{4})\-(\d{2})\-(\d{2})/", $date_time, $matches)) {
+        if (preg_match("/(\d{4})\-(\d{2})\-(\d{2})/", $dateInput, $matches)) {
             list($junk, $year, $month, $day) = $matches;
         }
-        if (preg_match("/(\d+):(\d{2}):(\d{2})/", $date_time, $matches)) {
+        if (preg_match("/(\d+):(\d{2}):(\d{2})/", $dateInput, $matches)) {
             list($junk, $hour, $min, $sec) = $matches;
             $seconds = ($hour * 60 * 60 + $min * 60 + $sec) / (24 * 60 * 60);
         }
@@ -1152,26 +1151,26 @@ class XLSXWriter
         return $days + $seconds;
     }
 
-    public function writeSheetRow($sheet_name, array $row, $row_options = null)
+    public function writeSheetRow($sheetName, array $row, $rowOptions = null)
     {
-        if (empty($sheet_name)) {
+        if (empty($sheetName)) {
             return;
         }
 
-        $this->initializeSheet($sheet_name);
-        $sheet = &$this->sheets[$sheet_name];
+        $this->initializeSheet($sheetName);
+        $sheet = &$this->sheets[$sheetName];
         if (count($sheet->columns) < count($row)) {
-            $default_column_types = $this->initializeColumnTypes(
+            $defaultColumnTypes = $this->initializeColumnTypes(
                 array_fill(0, count($row), 'GENERAL')
             );//will map to n_auto
-            $sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
+            $sheet->columns = array_merge((array)$sheet->columns, $defaultColumnTypes);
         }
 
-        if (!empty($row_options)) {
-            $ht = isset($row_options['height']) ? (float)$row_options['height'] : 12.1;
-            $customHt = isset($row_options['height']);
-            $hidden = isset($row_options['hidden']) && (bool)($row_options['hidden']);
-            $collapsed = isset($row_options['collapsed']) && (bool)($row_options['collapsed']);
+        if (!empty($rowOptions)) {
+            $ht = isset($rowOptions['height']) ? (float)$rowOptions['height'] : 12.1;
+            $customHt = isset($rowOptions['height']);
+            $hidden = isset($rowOptions['hidden']) && (bool)($rowOptions['hidden']);
+            $collapsed = isset($rowOptions['collapsed']) && (bool)($rowOptions['collapsed']);
             $sheet->file_writer->write(
                 '<row collapsed="' . ($collapsed ? 'true' : 'false') . '" customFormat="false" customHeight="' . ($customHt ? 'true' : 'false') . '" hidden="' . ($hidden ? 'true' : 'false') . '" ht="' . ($ht) . '" outlineLevel="0" r="' . ($sheet->row_count + 1) . '">'
             );
@@ -1181,21 +1180,21 @@ class XLSXWriter
             );
         }
 
-        $style = &$row_options;
+        $style = &$rowOptions;
         $c = 0;
         foreach ($row as $v) {
-            $number_format = $sheet->columns[$c]['number_format'];
-            $number_format_type = $sheet->columns[$c]['number_format_type'];
-            $cell_style_idx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle(
-                $number_format,
+            $numberFormat = $sheet->columns[$c]['number_format'];
+            $numberFormatType = $sheet->columns[$c]['number_format_type'];
+            $cellStyleIdx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle(
+                $numberFormat,
                 json_encode(isset($style[0]) ? $style[$c] : $style)
             );
-            $this->writeCell($sheet->file_writer, $sheet->row_count, $c, $v, $number_format_type, $cell_style_idx);
+            $this->writeCell($sheet->file_writer, $sheet->row_count, $c, $v, $numberFormatType, $cellStyleIdx);
             $c++;
         }
         $sheet->file_writer->write('</row>');
         $sheet->row_count++;
-        $this->current_sheet = $sheet_name;
+        $this->current_sheet = $sheetName;
     }
 
     /**
