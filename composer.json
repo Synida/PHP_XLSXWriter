@@ -13,7 +13,8 @@
         "phpunit/phpunit": "4.3.*"
     },
     "require": {
-        "php": ">=5.2.1",
-        "ext-zip": "*"
+        "php": ">=7.0",
+        "ext-zip": "*",
+        "ext-json": "*"
     }
 }
